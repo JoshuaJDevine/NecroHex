@@ -24,9 +24,10 @@ namespace DBS.HexGrid
             SetManaColor(manaColor);
         }
 
-        public void SetManaColor(Types.ManaColors color)
+        public void SetManaColor(Types.ManaColors newColor)
         {
-            switch (color)
+            manaColor = newColor;
+            switch (newColor)
             {
                 case Types.ManaColors.Red:
                     spriteRenderer.sprite = manaSprites[0];

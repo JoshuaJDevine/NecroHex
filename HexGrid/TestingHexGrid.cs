@@ -18,7 +18,7 @@ public class TestingHexGrid : MonoBehaviour {
 
         public void Show() {
             visualTransform.Find("Selected").gameObject.SetActive(true);
-            Debug.Log("Selected mana color: " + mana.manaColor + " at position " + gridPosition.x + " : " + gridPosition.y);
+            Debug.Log("SELECTED MANA COLOR: " + mana.manaColor);
         }
 
         public void Hide() {
@@ -60,5 +60,7 @@ public class TestingHexGrid : MonoBehaviour {
                 lastGridObject.Show();
             }
         }
+
+        
     }
 }

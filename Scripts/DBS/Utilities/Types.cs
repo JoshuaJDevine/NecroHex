@@ -10,5 +10,14 @@
             Green,
             Purple
         }
+
+        public enum PlayerAction
+        {
+            Idle,
+            Dragging,
+            LeftClick,
+            RightClick,
+            Action1
+        }
     }
 }
