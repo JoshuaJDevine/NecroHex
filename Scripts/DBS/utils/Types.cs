@@ -1,7 +1,14 @@
-﻿namespace DBS.Utilities
+﻿namespace DBS.utils
 {
     public static class Types
     {
+        public enum UnitAnimations
+        {
+            Reborn,
+            Attack,
+            Run,
+            Idle
+        }
         public enum ManaColors
         {
             Red,

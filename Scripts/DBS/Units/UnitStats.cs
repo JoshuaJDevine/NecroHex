@@ -1,7 +1,6 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace DBS
+namespace DBS.Units
 {
     [CreateAssetMenu(menuName = "Necromerge/Unit Stats")]
     public class UnitStats : ScriptableObject

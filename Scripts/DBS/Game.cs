@@ -23,66 +23,54 @@
 
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using UnityEditor;
 using UnityEngine;
-using Types = DBS.Utilities.Types;
+using Types = DBS.utils.Types;
 
 namespace DBS
 {
     public class Game : MonoBehaviour
     {
-        [SerializeField] private Transform pfHex;
+        //Setup Singleton
+        public static Game Instance { get; private set; }
 
-        private GridHexXZ<GridObject> gridHexXZ;
+        //Public Variables
+        public GridHexXZ<Game.GridObject> PlayerBoard;
+        public GridHexXZ<Game.GridObject> EnemyBoard;
         
-        //Setup Singleton Pattern
-        private static Game _instance;
-        public static Game Instance => _instance;
-        
-        //Variables
+        //Private Variables
         [ShowInInspector] private GridObject selectedHex;
         [ShowInInspector] private GridObject swappedHex;
         [ShowInInspector] private Types.PlayerAction playersCurrentAction;
         [ShowInInspector] private List<GridObject> consecutiveColors = new();
+        [ShowInInspector] private int distanceToCheckForMatches = 2;
 
-        public int distanceToCheckForMatches;
         private void Awake()
         {
-            //Manage Singleton Pattern
-            if (_instance != null && _instance != this)
+            //Manage Singleton
+            if (Instance != null && Instance != this)
             {
                 Destroy(this.gameObject);
             } else {
-                _instance = this;
+                Instance = this;
             }
             
-            //CREATE GRID
-            int width = 8;
-            int height = 8;
-            float cellSize = 1f;
-            gridHexXZ = 
-                new GridHexXZ<GridObject>(width, height, cellSize, Vector3.zero, (GridHexXZ<GridObject> g, int x, int y) => new GridObject());
-
-            for (int x = 0; x < width; x++) {
-                for (int z = 0; z < height; z++) {
-                    Transform visualTransform = Instantiate(pfHex, gridHexXZ.GetWorldPosition(x, z), Quaternion.identity);
-                    GridObject newGridObj = gridHexXZ.GetGridObject(x, z);
-                    newGridObj.HexObject = visualTransform;
-                    newGridObj.Mana = newGridObj.HexObject.gameObject.GetComponent<DBS.HexGrid.Mana>();
-                    newGridObj.Unit = newGridObj.HexObject.gameObject.GetComponent<DBS.HexGrid.Unit>();
-                    newGridObj.GridPosition = new Vector2(x, z);
-                    newGridObj.Deselect();
-                }
-            }
-
             selectedHex = null;
             swappedHex = null;
             playersCurrentAction = Types.PlayerAction.Idle;
         }
-        private void Update() {
+        private void Update()
+        {
+            HandleInput();
+        }
+
+        private void HandleInput()
+        {
+            //Left Click Down
             if (Input.GetMouseButtonDown(0))
             {
-                GridObject newSelectedHex = gridHexXZ.GetGridObject(Mouse3D.GetMouseWorldPosition());
+                GridObject newSelectedHex = PlayerBoard.GetGridObject(Mouse3D.GetMouseWorldPosition());
+
+                if (newSelectedHex == null) return;
 
                 if (newSelectedHex.Mana.manaEnergy > 0)
                 {
@@ -92,7 +80,8 @@ namespace DBS
                         return;
                     }
 
-                    if (selectedHex != null) {
+                    if (selectedHex != null)
+                    {
                         selectedHex.Deselect();
                     }
 
@@ -101,78 +90,84 @@ namespace DBS
                 }
             }
 
+            //Left Click Hold
             if (Input.GetMouseButton(0))
             {
                 playersCurrentAction = Types.PlayerAction.Dragging;
             }
 
-            
+            //Left Click Up
             if (Input.GetMouseButtonUp(0))
             {
                 if (playersCurrentAction == Types.PlayerAction.Dragging)
                 {
                     if (Input.GetMouseButtonUp(0) && selectedHex != null)
                     {
-                        GridObject newSelectedHex = gridHexXZ.GetGridObject(Mouse3D.GetMouseWorldPosition());
+                        GridObject newSelectedHex = PlayerBoard.GetGridObject(Mouse3D.GetMouseWorldPosition());
+
+                        if (newSelectedHex == null) return;
+
                         if (newSelectedHex != selectedHex && newSelectedHex.Mana.manaEnergy > 0)
                         {
                             swappedHex = newSelectedHex;
-                            SwapHexColors();
+                            SwapHexMana();
+                            
+                            void SwapHexMana()
+                            {
+                                if (selectedHex != null && swappedHex != null)
+                                {
+                                    Types.ManaColors selectedManaColor = selectedHex.Mana.manaColor;
+                                    selectedHex.Mana.SetManaColor(swappedHex.Mana.manaColor);
+                                    swappedHex.Mana.SetManaColor(selectedManaColor);
+                
+                                    FindMatches(PlayerBoard, swappedHex.GridPosition, swappedHex.Mana.manaColor);
+
+                                    if (consecutiveColors.Count >= distanceToCheckForMatches)
+                                    {
+                                        swappedHex.Mana.DisableMana();
+                                        foreach (GridObject gridObject in consecutiveColors)
+                                        {
+                                            gridObject.Mana.DisableMana();
+                                        }
+                                        swappedHex.Unit.CreateUnit(Types.Units.SkeletonWarrior, false);
+                                    }
+                
+                                    selectedHex.Deselect();
+                                    swappedHex.Deselect();
+
+                                    selectedHex = null;
+                                    swappedHex = null;
+                                }
+                            }
                         }
                     }
                 }
-                
+
+                //Reset Action to Idle
                 playersCurrentAction = Types.PlayerAction.Idle;
             }
         }
-
-        public void SwapHexColors()
-        {
-            if (selectedHex != null && swappedHex != null)
-            {
-                Types.ManaColors selectedManaColor = selectedHex.Mana.manaColor;
-                selectedHex.Mana.SetManaColor(swappedHex.Mana.manaColor);
-                swappedHex.Mana.SetManaColor(selectedManaColor);
-                
-                FindMatches(swappedHex.GridPosition, distanceToCheckForMatches, swappedHex.Mana.manaColor);
-
-                if (consecutiveColors.Count >= distanceToCheckForMatches)
-                {
-                    swappedHex.Mana.DisableMana();
-                    foreach (GridObject gridObject in consecutiveColors)
-                    {
-                        gridObject.Mana.DisableMana();
-                    }
-                    swappedHex.Unit.CreateUnit(Types.Units.SkeletonWarrior, false);
-                }
-                
-                selectedHex.Deselect();
-                swappedHex.Deselect();
-
-                selectedHex = null;
-                swappedHex = null;
-            }
-        }
-
-        public GridObject GetHex(Vector2 startingHexPosition, Types.HexDirections direction, int distance)
+        
+        // Given a board and a starting position, get a hex on that board in a certain direction a certain distance away. 
+        public GridObject GetHex(GridHexXZ<Game.GridObject> board, Vector2 startingHexPosition, Types.HexDirections direction, int distance)
         {
             switch (direction)
             {
                 case Types.HexDirections.E:
-                    return gridHexXZ.GetGridObject(Mathf.RoundToInt(startingHexPosition.x+distance), Mathf.RoundToInt(startingHexPosition.y));
-                    break;
+                    return board.GetGridObject(Mathf.RoundToInt(startingHexPosition.x+distance), Mathf.RoundToInt(startingHexPosition.y));
                 default:
                     return null;
             }
         }
         
-        
-        public GridObject GetHex(Vector2 startingHexPosition)
+        // Given a board get the hex at the given position 
+        public GridObject GetHex(GridHexXZ<Game.GridObject> board, Vector2 startingHexPosition)
         {
-            return gridHexXZ.GetGridObject(Mathf.RoundToInt(startingHexPosition.x), Mathf.RoundToInt(startingHexPosition.y));
+            return board.GetGridObject(Mathf.RoundToInt(startingHexPosition.x), Mathf.RoundToInt(startingHexPosition.y));
         }
 
-        public void FindMatches(Vector2 startPosition, int maxDistance, Types.ManaColors colorToCheck)
+        //Check for matching mana on a given board from a starting position. The matches will be check given the distance in the games distanceToCheckForMatches variable
+        public void FindMatches(GridHexXZ<Game.GridObject> board, Vector2 startPosition, Types.ManaColors colorToCheck)
         {
             consecutiveColors.Clear();
             //find consecutive
@@ -180,6 +175,7 @@ namespace DBS
             {
                 return;
             }
+
 
             List<GridObject> consecutiveEast = new List<GridObject>();
 
@@ -189,7 +185,7 @@ namespace DBS
                 for (int i = 1; i < distanceToCheckForMatches + 1; i++)
                 {
                     if (!isConsecutive) break;
-                    GridObject eGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x+i), Mathf.RoundToInt(startPosition.y));
+                    GridObject eGridObject = board.GetGridObject(Mathf.RoundToInt(startPosition.x+i), Mathf.RoundToInt(startPosition.y));
 
                     if (eGridObject != null)
                     {
@@ -214,13 +210,17 @@ namespace DBS
             
             //find surrounding
         }
-        public class GridObject {
-            public Transform HexObject;
-            public DBS.HexGrid.Mana Mana;
-            public Vector2 GridPosition;
-            public DBS.HexGrid.Unit Unit;
 
-            public void Select() {
+        //The GridObject class used by the game
+        public class GridObject
+        {
+            public Transform HexObject;
+            public Hex_Properties.Mana Mana;
+            public Vector2 GridPosition;
+            public DBS.HexProperties.Unit Unit;
+
+            public void Select()
+            {
                 Instance.selectedHex = this;
                 HexObject.Find("Selected").gameObject.SetActive(true);
             }
@@ -229,17 +229,6 @@ namespace DBS
             {
                 if (Instance.selectedHex == this) Instance.selectedHex = null;
                 HexObject.Find("Selected").gameObject.SetActive(false);
-            }
-        }
-
-        [Tooltip("Create Skeleton on currently selected Hex")]
-        [Button("Create Skeleton")]
-        public void CreateSkeleton()
-        {
-            if (selectedHex != null)
-            {
-                selectedHex.Mana.DisableMana();
-                selectedHex.Unit.CreateUnit(Types.Units.SkeletonWarrior, false);
             }
         }
     }

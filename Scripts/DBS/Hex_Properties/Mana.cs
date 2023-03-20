@@ -1,12 +1,9 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using Types = DBS.Utilities.Types;
+using Types = DBS.utils.Types;
 
-namespace DBS.HexGrid
+namespace DBS.Hex_Properties
 {
     public class Mana : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Types = DBS.Utilities.Types;
+using Types = DBS.utils.Types;
 
 public class TestingHexGrid : MonoBehaviour {
 
@@ -13,7 +13,7 @@ public class TestingHexGrid : MonoBehaviour {
 
     private class GridObject {
         public Transform visualTransform;
-        public DBS.HexGrid.Mana mana;
+        public DBS.Hex_Properties.Mana mana;
         public Vector2 gridPosition;
 
         public void Show() {
@@ -39,7 +39,7 @@ public class TestingHexGrid : MonoBehaviour {
                 Transform visualTransform = Instantiate(pfHex, gridHexXZ.GetWorldPosition(x, z), Quaternion.identity);
                 GridObject newGridObj = gridHexXZ.GetGridObject(x, z);
                 newGridObj.visualTransform = visualTransform;
-                newGridObj.mana = newGridObj.visualTransform.gameObject.GetComponent<DBS.HexGrid.Mana>();
+                newGridObj.mana = newGridObj.visualTransform.gameObject.GetComponent<DBS.Hex_Properties.Mana>();
                 newGridObj.gridPosition = new Vector2(x, z);
                 newGridObj.Hide();
             }
