@@ -13,6 +13,7 @@ namespace DBS.HexGrid
         public SpriteRenderer spriteRenderer;
         public List<Sprite> manaSprites;
         public Types.ManaColors manaColor;
+        public int manaEnergy;
         private void Awake()
         {
             RadnomizeColor();
@@ -24,8 +25,17 @@ namespace DBS.HexGrid
             SetManaColor(manaColor);
         }
 
+        public void DisableMana()
+        {
+            manaEnergy = 0;
+            spriteRenderer.enabled = false;
+        }
+
         public void SetManaColor(Types.ManaColors newColor)
         {
+            manaEnergy = 1;
+            spriteRenderer.enabled = true;
+
             manaColor = newColor;
             switch (newColor)
             {

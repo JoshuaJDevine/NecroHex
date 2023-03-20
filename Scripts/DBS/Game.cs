@@ -69,6 +69,7 @@ namespace DBS
                     GridObject newGridObj = gridHexXZ.GetGridObject(x, z);
                     newGridObj.HexObject = visualTransform;
                     newGridObj.Mana = newGridObj.HexObject.gameObject.GetComponent<DBS.HexGrid.Mana>();
+                    newGridObj.Unit = newGridObj.HexObject.gameObject.GetComponent<DBS.HexGrid.Unit>();
                     newGridObj.GridPosition = new Vector2(x, z);
                     newGridObj.Deselect();
                 }
@@ -83,18 +84,21 @@ namespace DBS
             {
                 GridObject newSelectedHex = gridHexXZ.GetGridObject(Mouse3D.GetMouseWorldPosition());
 
-               if (newSelectedHex == selectedHex)
-               {
-                   selectedHex.Deselect();
-                   return;
-               }
+                if (newSelectedHex.Mana.manaEnergy > 0)
+                {
+                    if (newSelectedHex == selectedHex)
+                    {
+                        selectedHex.Deselect();
+                        return;
+                    }
 
-               if (selectedHex != null) {
-                   selectedHex.Deselect();
-               }
+                    if (selectedHex != null) {
+                        selectedHex.Deselect();
+                    }
 
-               selectedHex = newSelectedHex;
-               selectedHex.Select();
+                    selectedHex = newSelectedHex;
+                    selectedHex.Select();
+                }
             }
 
             if (Input.GetMouseButton(0))
@@ -110,7 +114,7 @@ namespace DBS
                     if (Input.GetMouseButtonUp(0) && selectedHex != null)
                     {
                         GridObject newSelectedHex = gridHexXZ.GetGridObject(Mouse3D.GetMouseWorldPosition());
-                        if (newSelectedHex != selectedHex)
+                        if (newSelectedHex != selectedHex && newSelectedHex.Mana.manaEnergy > 0)
                         {
                             swappedHex = newSelectedHex;
                             SwapHexColors();
@@ -132,6 +136,16 @@ namespace DBS
                 
                 FindMatches(swappedHex.GridPosition, distanceToCheckForMatches, swappedHex.Mana.manaColor);
 
+                if (consecutiveColors.Count >= distanceToCheckForMatches)
+                {
+                    swappedHex.Mana.DisableMana();
+                    foreach (GridObject gridObject in consecutiveColors)
+                    {
+                        gridObject.Mana.DisableMana();
+                    }
+                    swappedHex.Unit.CreateUnit(0);
+                }
+                
                 selectedHex.Deselect();
                 swappedHex.Deselect();
 
@@ -187,6 +201,7 @@ namespace DBS
             public Transform HexObject;
             public DBS.HexGrid.Mana Mana;
             public Vector2 GridPosition;
+            public DBS.HexGrid.Unit Unit;
 
             public void Select() {
                 Instance.selectedHex = this;
