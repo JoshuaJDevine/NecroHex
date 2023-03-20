@@ -1,4 +1,5 @@
-﻿using DBS.utils;
+﻿using System.Collections.Generic;
+using DBS.utils;
 using UnityEngine;
 using Types = DBS.utils.Types;
 
@@ -34,6 +35,11 @@ namespace DBS
                     {
                         newGridObj.Mana.DisableMana();
                         newGridObj.Unit.CreateUnit(Types.Units.HumanFootman, true);
+                        newGridObj.Unit.gridObject = newGridObj;
+                    }
+                    else
+                    {
+                        newGridObj.Mana.RadnomizeColor();
                     }
                 }
             }

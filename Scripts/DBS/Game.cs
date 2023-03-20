@@ -22,6 +22,7 @@
  */
 
 using System.Collections.Generic;
+using DBS.HexProperties;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Types = DBS.utils.Types;
@@ -36,6 +37,9 @@ namespace DBS
         //Public Variables
         public GridHexXZ<Game.GridObject> PlayerBoard;
         public GridHexXZ<Game.GridObject> EnemyBoard;
+        public List<Unit> activeEnemyUnits = new List<Unit>();
+        public List<Unit> activePlayerUnits = new List<Unit>();
+
         
         //Private Variables
         [ShowInInspector] private GridObject selectedHex;
@@ -130,8 +134,9 @@ namespace DBS
                                             gridObject.Mana.DisableMana();
                                         }
                                         swappedHex.Unit.CreateUnit(Types.Units.SkeletonWarrior, false);
+                                        swappedHex.Unit.gridObject = swappedHex;
                                     }
-                
+
                                     selectedHex.Deselect();
                                     swappedHex.Deselect();
 

@@ -11,12 +11,8 @@ namespace DBS.Hex_Properties
         public List<Sprite> manaSprites;
         public Types.ManaColors manaColor;
         public int manaEnergy;
-        private void Awake()
-        {
-            RadnomizeColor();
-        }
 
-        private void RadnomizeColor()
+        public void RadnomizeColor()
         {
             manaColor = (Types.ManaColors)Random.Range(0, System.Enum.GetValues(typeof(Types.ManaColors)).Length);
             SetManaColor(manaColor);
@@ -24,6 +20,7 @@ namespace DBS.Hex_Properties
 
         public void DisableMana()
         {
+            manaColor = Types.ManaColors.None;
             manaEnergy = 0;
             spriteRenderer.enabled = false;
         }
@@ -50,6 +47,10 @@ namespace DBS.Hex_Properties
                     break;
                 case Types.ManaColors.Purple:
                     spriteRenderer.sprite = manaSprites[4];
+                    break;
+                case Types.ManaColors.None:
+                    spriteRenderer.sprite = null;
+                    manaEnergy = 0;
                     break;
             }
         } 

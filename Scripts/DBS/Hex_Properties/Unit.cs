@@ -6,12 +6,14 @@ using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEngine;
+using Random = UnityEngine.Random;
 using Types = DBS.utils.Types;
 
 namespace DBS.HexProperties
 {
     public class Unit : MonoBehaviour
     {
+        public Game.GridObject gridObject;
         public Animator animator;
         public List<AnimatorController> unitAnimators;
         public List<UnitStats> unitStatsList;
@@ -30,35 +32,46 @@ namespace DBS.HexProperties
         public void CreateUnit(Types.Units unitType, bool isEnemy)
         {
             animator.runtimeAnimatorController = unitAnimators[(int)unitType];
-            PlayAnimation(Types.UnitAnimations.Idle);
-            PlayAnimation(Types.UnitAnimations.Reborn);
-
             unitStats = unitStatsList[(int)unitType];
 
+            if (unitType == Types.Units.None) return;
+            
+            PlayAnimation(Types.UnitAnimations.Idle);
+            PlayAnimation(Types.UnitAnimations.Reborn);
+            
             if (isEnemy)
             {
+                Game.Instance.activeEnemyUnits.Add(this);
                 spriteRenderer.flipX = true;
             }
+            else
+            {
+                Game.Instance.activePlayerUnits.Add(this);
+                spriteRenderer.flipX = false;
+            }
+            
         }
 
-        [Button("ATTACK!")]
-        public void EnemyAttackPlayer()
+        [Button("Attack random player unit")]
+        public void AttackRandomPlayerUnit()
         {
-            Game.GridObject unitsGridObject = Game.Instance.GetHex(Game.Instance.PlayerBoard, new Vector2(1,0));
-            Debug.Log("Found " + unitsGridObject.Unit.unitStats.name);
-            if (unitsGridObject.Unit.unitStats.name != "None")
-            {
-                PlayAnimation(Types.UnitAnimations.Run);
-                
-                Vector3 newPos = Game.Instance.GetHex(Game.Instance.PlayerBoard, new Vector2(1,0), Types.HexDirections.E, 1).HexObject.transform.position;
+            if (Game.Instance.activePlayerUnits.Count < 1) return;
 
-                transform.DOMove(newPos, unitStats.movementSpeed).OnComplete(() =>
-                {
-                    unitsGridObject.Unit.PlayAnimation(Types.UnitAnimations.Attack);
-                    PlayAnimation(Types.UnitAnimations.Attack);
-                    PlayAnimation(Types.UnitAnimations.Idle);
-                });
-            }
+            Unit attackingUnit = this;
+            Unit defendingUnit = Game.Instance.activePlayerUnits[Random.Range (0, Game.Instance.activePlayerUnits.Count)];
+            
+
+            attackingUnit.PlayAnimation(Types.UnitAnimations.Run);
+            
+            Vector3 defndingUnitPosPlusOne = Game.Instance.GetHex(Game.Instance.PlayerBoard, defendingUnit.gridObject.GridPosition, Types.HexDirections.E, 1).HexObject.transform.position;
+
+            transform.DOMove(defndingUnitPosPlusOne, unitStats.movementSpeed).OnComplete(() =>
+            {
+                defendingUnit.PlayAnimation(Types.UnitAnimations.Attack);
+                attackingUnit.PlayAnimation(Types.UnitAnimations.Attack);
+                attackingUnit.PlayAnimation(Types.UnitAnimations.Idle);
+            });
+            
         }
         
         public void PlayAnimation(Types.UnitAnimations unitAnimation)

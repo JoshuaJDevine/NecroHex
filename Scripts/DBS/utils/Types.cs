@@ -15,7 +15,8 @@
             Yellow,
             Blue,
             Green,
-            Purple
+            Purple,
+            None
         }
 
         public enum PlayerAction
