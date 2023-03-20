@@ -8,7 +8,10 @@ namespace DBS
     {
         public float attackSpeedMin;
         public float attackSpeedMax;
+        public float movementSpeed;
+        public float attackSpeed;
         public int hitPoints;
         public int attackDamage;
+        public int threatLevel;
     }
 }

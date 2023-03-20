@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0084bbf041b54462bb5a128646e31d20, type: 3}
   m_Name: Human Footman
   m_EditorClassIdentifier: 
-  attackSpeedMin: 3
-  attackSpeedMax: 6
+  attackSpeedMin: 0.3
+  attackSpeedMax: 0.6
+  movementSpeed: 6
+  attackSpeed: 1
   hitPoints: 120
   attackDamage: 25
+  threatLevel: 1

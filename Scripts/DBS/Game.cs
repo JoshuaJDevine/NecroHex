@@ -152,7 +152,24 @@ namespace DBS
                 selectedHex = null;
                 swappedHex = null;
             }
+        }
 
+        public GridObject GetHex(Vector2 startingHexPosition, Types.HexDirections direction, int distance)
+        {
+            switch (direction)
+            {
+                case Types.HexDirections.E:
+                    return gridHexXZ.GetGridObject(Mathf.RoundToInt(startingHexPosition.x+distance), Mathf.RoundToInt(startingHexPosition.y));
+                    break;
+                default:
+                    return null;
+            }
+        }
+        
+        
+        public GridObject GetHex(Vector2 startingHexPosition)
+        {
+            return gridHexXZ.GetGridObject(Mathf.RoundToInt(startingHexPosition.x), Mathf.RoundToInt(startingHexPosition.y));
         }
 
         public void FindMatches(Vector2 startPosition, int maxDistance, Types.ManaColors colorToCheck)
@@ -197,7 +214,7 @@ namespace DBS
             
             //find surrounding
         }
-        private class GridObject {
+        public class GridObject {
             public Transform HexObject;
             public DBS.HexGrid.Mana Mana;
             public Vector2 GridPosition;
