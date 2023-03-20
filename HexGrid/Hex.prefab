@@ -259,6 +259,16 @@ MonoBehaviour:
   - {fileID: 9100000, guid: 9a11975aac61d7c498c6bd6686357ecc, type: 2}
   - {fileID: 9100000, guid: cf42affa1a44d7e45acfc3789607fc97, type: 2}
   - {fileID: 9100000, guid: cfa6909a186e47e428ee790e0f1b636e, type: 2}
+  unitStatsList:
+  - {fileID: 11400000, guid: 692097dd021343b419003d9d07ca98f8, type: 2}
+  - {fileID: 11400000, guid: 692097dd021343b419003d9d07ca98f8, type: 2}
+  - {fileID: 11400000, guid: 692097dd021343b419003d9d07ca98f8, type: 2}
+  - {fileID: 11400000, guid: 692097dd021343b419003d9d07ca98f8, type: 2}
+  - {fileID: 11400000, guid: 692097dd021343b419003d9d07ca98f8, type: 2}
+  - {fileID: 11400000, guid: f00ca00831c678545ace9baf58cab88b, type: 2}
+  - {fileID: 11400000, guid: 692097dd021343b419003d9d07ca98f8, type: 2}
+  spriteRenderer: {fileID: 5332733365149141827}
+  unitStats: {fileID: 0}
 --- !u!1 &6993173029015906059
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,7 +426,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 1531794980, guid: 6b2423336a0e91547a1edfbc00cf61f9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

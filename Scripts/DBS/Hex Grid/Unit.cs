@@ -10,10 +10,12 @@ namespace DBS.HexGrid
     {
         public Animator animator;
         public List<AnimatorController> unitAnimators;
-
+        public List<UnitStats> unitStatsList;
+        public SpriteRenderer spriteRenderer;
+        public UnitStats unitStats;
         private void Awake()
         {
-            CreateUnit(Types.Units.None);
+            CreateUnit(Types.Units.None, false);
         }
 
         public void KillUnit()
@@ -21,11 +23,18 @@ namespace DBS.HexGrid
             animator.SetBool("Dead", true);
         }
 
-        public void CreateUnit(Types.Units unitType)
+        public void CreateUnit(Types.Units unitType, bool isEnemy)
         {
             animator.runtimeAnimatorController = unitAnimators[(int)unitType];
             animator.SetBool("Run", false);
             animator.SetTrigger("Appear");
+
+            unitStats = unitStatsList[(int)unitType];
+
+            if (isEnemy)
+            {
+                spriteRenderer.flipX = true;
+            }
         }
 
         public void Attack()

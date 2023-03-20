@@ -143,7 +143,7 @@ namespace DBS
                     {
                         gridObject.Mana.DisableMana();
                     }
-                    swappedHex.Unit.CreateUnit(Types.Units.SkeletonWarrior);
+                    swappedHex.Unit.CreateUnit(Types.Units.SkeletonWarrior, false);
                 }
                 
                 selectedHex.Deselect();
@@ -222,7 +222,7 @@ namespace DBS
             if (selectedHex != null)
             {
                 selectedHex.Mana.DisableMana();
-                selectedHex.Unit.CreateUnit(Types.Units.SkeletonWarrior);
+                selectedHex.Unit.CreateUnit(Types.Units.SkeletonWarrior, false);
             }
         }
     }
