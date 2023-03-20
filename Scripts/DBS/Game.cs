@@ -21,6 +21,7 @@
  * --- Add Challenfe by making the grid larger and smaller
  */
 
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -42,7 +43,7 @@ namespace DBS
         [ShowInInspector] private GridObject selectedHex;
         [ShowInInspector] private GridObject swappedHex;
         [ShowInInspector] private Types.PlayerAction playersCurrentAction;
-
+        [ShowInInspector] private List<GridObject> availableHexes = new();
         private void Awake()
         {
             //Manage Singleton Pattern
@@ -110,7 +111,6 @@ namespace DBS
                         if (newSelectedHex != selectedHex)
                         {
                             swappedHex = newSelectedHex;
-                            Debug.Log("Swap hex at position " + selectedHex.GridPosition + " with hex at " + newSelectedHex.GridPosition);
                             SwapHexColors();
                         }
                     }
@@ -142,10 +142,44 @@ namespace DBS
         public void FindMatches(Vector2 startPosition, int maxDistance)
         {                    
             GridObject startingGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x), Mathf.RoundToInt(startPosition.y));
-            
-            Debug.Log("Start search from " + startingGridObject.GridPosition);
 
+            availableHexes.Clear();
             
+            GridObject swGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x-1), Mathf.RoundToInt(startPosition.y-1));
+            if (swGridObject != null)
+            {
+                availableHexes.Add(swGridObject);
+            }
+            
+            GridObject wGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x-1), Mathf.RoundToInt(startPosition.y));
+            if (wGridObject != null)
+            {
+                availableHexes.Add(wGridObject);
+            }
+            
+            GridObject nwGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x-1), Mathf.RoundToInt(startPosition.y+1));
+            if (nwGridObject != null)
+            {
+                availableHexes.Add(nwGridObject);
+            }
+            
+            GridObject neGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x), Mathf.RoundToInt(startPosition.y+1));
+            if (neGridObject != null)
+            {
+                availableHexes.Add(neGridObject);
+            }
+            
+            GridObject eGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x+1), Mathf.RoundToInt(startPosition.y));
+            if (eGridObject != null)
+            {
+                availableHexes.Add(eGridObject);
+            }
+            
+            GridObject seGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x), Mathf.RoundToInt(startPosition.y-1));
+            if (seGridObject != null)
+            {
+                availableHexes.Add(seGridObject);
+            }
         }
         private class GridObject {
             public Transform HexObject;
