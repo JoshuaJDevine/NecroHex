@@ -143,7 +143,7 @@ namespace DBS
                     {
                         gridObject.Mana.DisableMana();
                     }
-                    swappedHex.Unit.CreateUnit(0);
+                    swappedHex.Unit.CreateUnit(Types.Units.SkeletonWarrior);
                 }
                 
                 selectedHex.Deselect();
@@ -213,6 +213,17 @@ namespace DBS
             {
                 if (Instance.selectedHex == this) Instance.selectedHex = null;
                 HexObject.Find("Selected").gameObject.SetActive(false);
+            }
+        }
+
+        [Tooltip("Create Skeleton on currently selected Hex")]
+        [Button("Create Skeleton")]
+        public void CreateSkeleton()
+        {
+            if (selectedHex != null)
+            {
+                selectedHex.Mana.DisableMana();
+                selectedHex.Unit.CreateUnit(Types.Units.SkeletonWarrior);
             }
         }
     }

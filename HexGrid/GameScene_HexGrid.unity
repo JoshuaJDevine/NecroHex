@@ -268,6 +268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pfHex: {fileID: 6771049759014007995, guid: 736c97cdbb31a9348ab8d0d3faadb079, type: 3}
+  distanceToCheckForMatches: 2
 --- !u!4 &171986142
 Transform:
   m_ObjectHideFlags: 0

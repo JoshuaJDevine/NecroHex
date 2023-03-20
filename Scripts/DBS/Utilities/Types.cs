@@ -30,5 +30,16 @@
             Se,
             None
         }
+
+        public enum Units
+        {
+            SkeletonWarrior,
+            SkeletonArcher,
+            SkeletonBerskerker,
+            SkeletonMage,
+            SkeletonWolf,
+            HumanFootman,
+            None
+        }
     }
 }

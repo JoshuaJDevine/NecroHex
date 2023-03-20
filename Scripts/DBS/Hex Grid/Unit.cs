@@ -1,28 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
+using Types = DBS.Utilities.Types;
 
 namespace DBS.HexGrid
 {
     public class Unit : MonoBehaviour
     {
-        public SpriteRenderer spriteRenderer;
-        public List<Sprite> unitSprites;
+        public Animator animator;
+        public List<AnimatorController> unitAnimators;
 
         private void Awake()
         {
-            KillUnit();
+            CreateUnit(Types.Units.None);
         }
 
         public void KillUnit()
         {
-            spriteRenderer.enabled = false;
+            animator.SetBool("Dead", true);
         }
 
-        public void CreateUnit(int unitNumber)
+        public void CreateUnit(Types.Units unitType)
         {
-            spriteRenderer.enabled = true;
-            spriteRenderer.sprite = unitSprites[unitNumber];
+            animator.runtimeAnimatorController = unitAnimators[(int)unitType];
+            animator.SetBool("Run", false);
+            animator.SetTrigger("Appear");
+        }
+
+        public void Attack()
+        {
+            animator.SetTrigger("Attack");
+        }
+        
+        public void Run()
+        {
+            animator.SetBool("Run", true);
+        }
+
+        public void Idle()
+        {
+            animator.SetBool("Run", false);
         }
     }
 }
