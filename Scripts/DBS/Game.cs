@@ -205,7 +205,6 @@ namespace DBS
 
             public void Select() {
                 Instance.selectedHex = this;
-                Debug.Log("Selected Hex is now color is " + Mana.manaColor + " gridPos: " + GridPosition.x + ", " + GridPosition.y);
                 HexObject.Find("Selected").gameObject.SetActive(true);
             }
 
