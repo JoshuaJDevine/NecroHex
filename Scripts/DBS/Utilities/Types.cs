@@ -19,5 +19,16 @@
             RightClick,
             Action1
         }
+
+        public enum HexDirections
+        {
+            Sw,
+            W,
+            Nw,
+            Ne,
+            E,
+            Se,
+            None
+        }
     }
 }

@@ -43,7 +43,9 @@ namespace DBS
         [ShowInInspector] private GridObject selectedHex;
         [ShowInInspector] private GridObject swappedHex;
         [ShowInInspector] private Types.PlayerAction playersCurrentAction;
-        [ShowInInspector] private List<GridObject> availableHexes = new();
+        [ShowInInspector] private List<GridObject> consecutiveColors = new();
+
+        public int distanceToCheckForMatches;
         private void Awake()
         {
             //Manage Singleton Pattern
@@ -128,10 +130,10 @@ namespace DBS
                 selectedHex.Mana.SetManaColor(swappedHex.Mana.manaColor);
                 swappedHex.Mana.SetManaColor(selectedManaColor);
                 
+                FindMatches(swappedHex.GridPosition, distanceToCheckForMatches, swappedHex.Mana.manaColor);
+
                 selectedHex.Deselect();
                 swappedHex.Deselect();
-
-                FindMatches(swappedHex.GridPosition, 2);
 
                 selectedHex = null;
                 swappedHex = null;
@@ -139,47 +141,47 @@ namespace DBS
 
         }
 
-        public void FindMatches(Vector2 startPosition, int maxDistance)
-        {                    
-            GridObject startingGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x), Mathf.RoundToInt(startPosition.y));
+        public void FindMatches(Vector2 startPosition, int maxDistance, Types.ManaColors colorToCheck)
+        {
+            consecutiveColors.Clear();
+            //find consecutive
+            if (distanceToCheckForMatches < 1)
+            {
+                return;
+            }
 
-            availableHexes.Clear();
-            
-            GridObject swGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x-1), Mathf.RoundToInt(startPosition.y-1));
-            if (swGridObject != null)
+            List<GridObject> consecutiveEast = new List<GridObject>();
+
+            void CheckEast()
             {
-                availableHexes.Add(swGridObject);
+                bool isConsecutive = true;
+                for (int i = 1; i < distanceToCheckForMatches + 1; i++)
+                {
+                    if (!isConsecutive) break;
+                    GridObject eGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x+i), Mathf.RoundToInt(startPosition.y));
+
+                    if (eGridObject != null)
+                    {
+                        if (eGridObject.Mana.manaColor == colorToCheck)
+                        {
+                            consecutiveEast.Add(eGridObject);
+                        }
+                        else
+                        {
+                            isConsecutive = false;
+                        }
+                    }
+                }
+
+                if (consecutiveEast.Count > consecutiveColors.Count)
+                {
+                    consecutiveColors = consecutiveEast;
+                }
             }
             
-            GridObject wGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x-1), Mathf.RoundToInt(startPosition.y));
-            if (wGridObject != null)
-            {
-                availableHexes.Add(wGridObject);
-            }
+            CheckEast();
             
-            GridObject nwGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x-1), Mathf.RoundToInt(startPosition.y+1));
-            if (nwGridObject != null)
-            {
-                availableHexes.Add(nwGridObject);
-            }
-            
-            GridObject neGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x), Mathf.RoundToInt(startPosition.y+1));
-            if (neGridObject != null)
-            {
-                availableHexes.Add(neGridObject);
-            }
-            
-            GridObject eGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x+1), Mathf.RoundToInt(startPosition.y));
-            if (eGridObject != null)
-            {
-                availableHexes.Add(eGridObject);
-            }
-            
-            GridObject seGridObject = gridHexXZ.GetGridObject(Mathf.RoundToInt(startPosition.x), Mathf.RoundToInt(startPosition.y-1));
-            if (seGridObject != null)
-            {
-                availableHexes.Add(seGridObject);
-            }
+            //find surrounding
         }
         private class GridObject {
             public Transform HexObject;
