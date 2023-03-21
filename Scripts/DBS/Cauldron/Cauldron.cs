@@ -1,27 +1,39 @@
-﻿using Sirenix.OdinInspector;
+﻿using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = UnityEngine.Random;
 using Types = DBS.utils.Types;
 
 namespace DBS.Cauldron
 {
     public class Cauldron : MonoBehaviour
     {
+        public Types.ManaColors currentAvailableColor;
         public SpriteRenderer spriteRenderer;
 
+        private void Awake()
+        {
+            SetCauldronColor((Types.ManaColors)Random.Range(0, System.Enum.GetValues(typeof(Types.ManaColors)).Length));
+        }
+
         [Button("CREATE MANA")]
-        public void CreateMana()
+        public void CreateMana(Types.ManaColors manaColor)
         {
             Game.GridObject gridObject = Game.Instance.GetHex(Game.Instance.PlayerBoard, new Vector2(
                 Random.Range(0,Game.Instance.PlayerBoard.GetWidth()), 
                 Random.Range(0,Game.Instance.PlayerBoard.GetHeight())));
-            
-            Types.ManaColors newColor = gridObject.Mana.RadnomizeColor();
 
-            switch (newColor)
+            gridObject.Mana.SetManaColor(manaColor);
+        }
+
+        public void SetCauldronColor(Types.ManaColors manaColor)
+        {
+            currentAvailableColor = manaColor;
+            switch (manaColor)
             {
                 case Types.ManaColors.Blue:
                     spriteRenderer.color = Color.blue;
-                    break;               
+                    break;
                 case Types.ManaColors.Green:
                     spriteRenderer.color = Color.green;
                     break;

@@ -42,6 +42,7 @@ namespace DBS
         public List<Unit> activeEnemyUnits = new List<Unit>();
         public List<Unit> activePlayerUnits = new List<Unit>();
         public Necromancer necromancer;
+        public Cauldron.Cauldron cauldron;
 
         //Private Variables
         [ShowInInspector] private GridObject selectedHex;
@@ -157,9 +158,18 @@ namespace DBS
                         }
                     }
                 }
-
                 //Reset Action to Idle
                 playersCurrentAction = Types.PlayerAction.Idle;
+            }
+            
+            
+            if (Input.GetMouseButtonDown(1) && playersCurrentAction == Types.PlayerAction.Idle)
+            {
+
+                cauldron.CreateMana(cauldron.currentAvailableColor);
+                
+                Types.ManaColors newColor = (Types.ManaColors)Random.Range(0, System.Enum.GetValues(typeof(Types.ManaColors)).Length);
+                cauldron.SetCauldronColor(newColor);
             }
         }
         
