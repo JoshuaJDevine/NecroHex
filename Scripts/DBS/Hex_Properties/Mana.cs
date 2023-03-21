@@ -12,10 +12,12 @@ namespace DBS.Hex_Properties
         public Types.ManaColors manaColor;
         public int manaEnergy;
 
-        public void RadnomizeColor()
+        public Types.ManaColors RadnomizeColor()
         {
             manaColor = (Types.ManaColors)Random.Range(0, System.Enum.GetValues(typeof(Types.ManaColors)).Length);
             SetManaColor(manaColor);
+
+            return manaColor;
         }
 
         public void DisableMana()

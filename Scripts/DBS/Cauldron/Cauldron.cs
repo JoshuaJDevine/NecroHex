@@ -1,5 +1,6 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
+using Types = DBS.utils.Types;
 
 namespace DBS.Cauldron
 {
@@ -14,7 +15,26 @@ namespace DBS.Cauldron
                 Random.Range(0,Game.Instance.PlayerBoard.GetWidth()), 
                 Random.Range(0,Game.Instance.PlayerBoard.GetHeight())));
             
-            gridObject.Mana.RadnomizeColor();
+            Types.ManaColors newColor = gridObject.Mana.RadnomizeColor();
+
+            switch (newColor)
+            {
+                case Types.ManaColors.Blue:
+                    spriteRenderer.color = Color.blue;
+                    break;               
+                case Types.ManaColors.Green:
+                    spriteRenderer.color = Color.green;
+                    break;
+                case Types.ManaColors.Purple:
+                    spriteRenderer.color = Color.magenta;
+                    break;
+                case Types.ManaColors.Red:
+                    spriteRenderer.color = Color.red;
+                    break;
+                case Types.ManaColors.Yellow:
+                    spriteRenderer.color = Color.yellow;
+                    break;
+            }
         }
     }
 }
