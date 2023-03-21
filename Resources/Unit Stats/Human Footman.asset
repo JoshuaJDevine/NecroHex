@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackSpeedMin: 0.3
   attackSpeedMax: 0.6
-  movementSpeed: 6
+  movementSpeed: 5
   attackSpeed: 1
   hitPoints: 120
   attackDamage: 25

@@ -49,5 +49,10 @@
             HumanFootman,
             None
         }
+
+        public enum NecromancerAnimations
+        {
+            Cast,
+        }
     }
 }

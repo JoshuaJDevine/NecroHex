@@ -23,8 +23,10 @@
 
 using System.Collections.Generic;
 using DBS.HexProperties;
+using DBS.Units;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 using Types = DBS.utils.Types;
 
 namespace DBS
@@ -39,8 +41,8 @@ namespace DBS
         public GridHexXZ<Game.GridObject> EnemyBoard;
         public List<Unit> activeEnemyUnits = new List<Unit>();
         public List<Unit> activePlayerUnits = new List<Unit>();
+        public Necromancer necromancer;
 
-        
         //Private Variables
         [ShowInInspector] private GridObject selectedHex;
         [ShowInInspector] private GridObject swappedHex;
@@ -76,7 +78,7 @@ namespace DBS
 
                 if (newSelectedHex == null) return;
 
-                if (newSelectedHex.Mana.manaEnergy > 0)
+                if (newSelectedHex.Mana.manaEnergy > 0 && necromancer.Mana > 0)
                 {
                     if (newSelectedHex == selectedHex)
                     {
@@ -111,7 +113,7 @@ namespace DBS
 
                         if (newSelectedHex == null) return;
 
-                        if (newSelectedHex != selectedHex && newSelectedHex.Mana.manaEnergy > 0)
+                        if (newSelectedHex != selectedHex && newSelectedHex.Mana.manaEnergy > 0 && necromancer.Mana > 0)
                         {
                             swappedHex = newSelectedHex;
                             SwapHexMana();
@@ -133,8 +135,16 @@ namespace DBS
                                         {
                                             gridObject.Mana.DisableMana();
                                         }
-                                        swappedHex.Unit.CreateUnit(Types.Units.SkeletonWarrior, false);
                                         swappedHex.Unit.gridObject = swappedHex;
+
+                                        necromancer.objectsToCastTo.Enqueue(swappedHex);
+
+                                        necromancer.PlayAnimation(
+                                            Types.NecromancerAnimations.Cast, 
+                                            () =>
+                                            {
+                                                Debug.Log("Animation ended");
+                                            });
                                     }
 
                                     selectedHex.Deselect();

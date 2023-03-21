@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using DBS.Units;
 using DG.Tweening;
 using Sirenix.OdinInspector;
-using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -49,7 +49,6 @@ namespace DBS.HexProperties
                 Game.Instance.activePlayerUnits.Add(this);
                 spriteRenderer.flipX = false;
             }
-            
         }
 
         [Button("Attack random player unit")]
