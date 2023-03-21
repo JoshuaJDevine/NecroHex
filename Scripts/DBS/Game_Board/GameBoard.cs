@@ -39,7 +39,8 @@ namespace DBS
                     }
                     else
                     {
-                        newGridObj.Mana.RadnomizeColor();
+                        newGridObj.Mana.DisableMana();
+                        // newGridObj.Mana.RadnomizeColor();
                     }
                 }
             }
