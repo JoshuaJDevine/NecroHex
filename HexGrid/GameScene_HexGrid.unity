@@ -606,8 +606,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pfHex: {fileID: 6771049759014007995, guid: 736c97cdbb31a9348ab8d0d3faadb079, type: 3}
-  width: 8
-  height: 8
+  width: 4
+  height: 4
   isPlaceholderEnemyBoard: 0
 --- !u!4 &1044094823
 Transform:

@@ -12,18 +12,13 @@ namespace DBS.Units
     {
         public int MaxMana { get; set; }
         public int Mana { get; set; }
-        private Animator animator;
+        public Animator animator;
         public Queue<Game.GridObject> objectsToCastTo = new();
-        public Image greenManaImage;
-        public Sprite greenManaSprite;
         private void Awake()
         {
-            greenManaImage.fillAmount = 1;
             animator = GetComponent<Animator>();
             Mana = 4;
             MaxMana = 4;
-            greenManaImage.sprite = greenManaSprite;
-            greenManaImage.color = Color.white;
         }
 
         public void PlayAnimation(Types.NecromancerAnimations necromancerAnimation, UnityAction onAnimationEndEvent)
@@ -33,11 +28,6 @@ namespace DBS.Units
                 case Types.NecromancerAnimations.Cast:
                     animator.SetTrigger("Cast");
                     onAnimationEndEvent.Invoke();
-                    
-                    //Use Mana
-                    Mana -= 1;
-                    int manaPercentage = Mana * 100 / MaxMana;
-                    greenManaImage.DOFillAmount(((float)manaPercentage / 100), animator.GetCurrentAnimatorClipInfo(0).Length+.1f).SetEase(Ease.Linear);
                     break;
             }
         }

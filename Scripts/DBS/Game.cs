@@ -1,5 +1,9 @@
 ﻿/*
  * Notes:
+ * Game starts. Extra mana poofs away. Characters in grid take posiitons... i.e skeleton footman go to front of grid. Attacks assmebled outside pushing into the grid
+ * trying to defeat the players forces. Renew the energy. Leave the characters. You can also swap the characters to match three, trigger a death animation, and make them stronger
+ * Also find a way to power the existing characters with extra mana
+ * 
  * Start game with 2x2 grid for player
  * Finish implementing all match directions includinng all surrounding for bonus
  * Add Damage Numbers
@@ -127,7 +131,9 @@ namespace DBS
 
                         if (newSelectedHex == null) return;
 
-                        if (newSelectedHex != selectedHex && newSelectedHex.Mana.manaEnergy > 0 && necromancer.Mana > 0)
+                        Debug.Log("SELECTED HEX: " + selectedHex.Mana.manaEnergy);
+                        Debug.Log("SwapHEx: " + newSelectedHex.Mana.manaEnergy);
+                        if (newSelectedHex != selectedHex && newSelectedHex.Mana.manaEnergy > 0)
                         {
                             swappedHex = newSelectedHex;
                             SwapHexMana();
