@@ -1,5 +1,18 @@
 ﻿/*
  * Notes:
+ * Start game with 2x2 grid for player
+ * Finish implementing all match directions includinng all surrounding for bonus
+ * Add Damage Numbers
+ * Add Health Bars
+ * Max moves players has at start is 9? Start with 9 and test to see what is needed
+ * Skeletons can absorb certain mana around them to become slightly more powerful
+ * Will need to fight three footmen with 1-2 skeletons
+ * Can consume green mana slime blob to create a double green (implement this)
+ *
+ * Add SFX
+ * Add music
+ * Add title screen (made in a weekend productions)
+ * 
  * Upgrade Tree:
  * --- Skill tree idea: Mana Control
  * --- Initially you can swap mana and they move back if no match
@@ -203,7 +216,6 @@ namespace DBS
 
             GridObject result = null;
             
-            Debug.Log("Board height is " + board.GetHeight());
             for (int i = 0; i < board.GetHeight(); i++)
             {
                 GridObject hexObject = GetHex(board, new Vector2(startingHex.GridPosition.x, i));
