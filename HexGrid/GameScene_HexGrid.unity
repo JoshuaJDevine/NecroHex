@@ -270,6 +270,7 @@ MonoBehaviour:
   activeEnemyUnits: []
   activePlayerUnits: []
   necromancer: {fileID: 1870929381}
+  cauldron: {fileID: 851485708}
 --- !u!4 &171986142
 Transform:
   m_ObjectHideFlags: 0
@@ -573,6 +574,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d1fbfc70ce0447faad603c356e829af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentAvailableColor: 0
   spriteRenderer: {fileID: 1329263274}
 --- !u!1 &1044094821
 GameObject:

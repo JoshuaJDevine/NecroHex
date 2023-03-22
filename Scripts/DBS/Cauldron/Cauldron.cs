@@ -17,13 +17,9 @@ namespace DBS.Cauldron
         }
 
         [Button("CREATE MANA")]
-        public void CreateMana(Types.ManaColors manaColor)
+        public void CreateMana(Types.ManaColors manaColor, Game.GridObject hexToCreateManaOn)
         {
-            Game.GridObject gridObject = Game.Instance.GetHex(Game.Instance.PlayerBoard, new Vector2(
-                Random.Range(0,Game.Instance.PlayerBoard.GetWidth()), 
-                Random.Range(0,Game.Instance.PlayerBoard.GetHeight())));
-
-            gridObject.Mana.SetManaColor(manaColor);
+            hexToCreateManaOn.Mana.SetManaColor(manaColor);
         }
 
         public void SetCauldronColor(Types.ManaColors manaColor)

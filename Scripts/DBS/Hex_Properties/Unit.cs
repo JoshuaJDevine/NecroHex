@@ -13,6 +13,7 @@ namespace DBS.HexProperties
 {
     public class Unit : MonoBehaviour
     {
+        public bool HasUnit { get; set; }
         public Game.GridObject gridObject;
         public Animator animator;
         public List<AnimatorController> unitAnimators;
@@ -27,6 +28,7 @@ namespace DBS.HexProperties
         public void KillUnit()
         {
             //TODO
+            HasUnit = false;
         }
 
         public void CreateUnit(Types.Units unitType, bool isEnemy)
@@ -34,7 +36,11 @@ namespace DBS.HexProperties
             animator.runtimeAnimatorController = unitAnimators[(int)unitType];
             unitStats = unitStatsList[(int)unitType];
 
-            if (unitType == Types.Units.None) return;
+            if (unitType == Types.Units.None)
+            {
+                HasUnit = false;
+                return;
+            }
             
             PlayAnimation(Types.UnitAnimations.Idle);
             PlayAnimation(Types.UnitAnimations.Reborn);
@@ -49,6 +55,8 @@ namespace DBS.HexProperties
                 Game.Instance.activePlayerUnits.Add(this);
                 spriteRenderer.flipX = false;
             }
+
+            HasUnit = true;
         }
 
         [Button("Attack random player unit")]

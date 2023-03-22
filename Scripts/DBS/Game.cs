@@ -76,9 +76,9 @@ namespace DBS
             if (Input.GetMouseButtonDown(0))
             {
                 GridObject newSelectedHex = PlayerBoard.GetGridObject(Mouse3D.GetMouseWorldPosition());
-
-                if (newSelectedHex == null) return;
-
+                
+                Debug.Log("Click on " + newSelectedHex.GridPosition);
+                
                 if (newSelectedHex.Mana.manaEnergy > 0 && necromancer.Mana > 0)
                 {
                     if (newSelectedHex == selectedHex)
@@ -165,8 +165,20 @@ namespace DBS
             
             if (Input.GetMouseButtonDown(1) && playersCurrentAction == Types.PlayerAction.Idle)
             {
+                GridObject newSelectedHex = PlayerBoard.GetGridObject(Mouse3D.GetMouseWorldPosition());
+                
+                if (newSelectedHex == null) return;
+                Debug.Log("Click on " + newSelectedHex.GridPosition);
 
-                cauldron.CreateMana(cauldron.currentAvailableColor);
+                GridObject hexToCreateManaAt = GetEmptyHexClosestToZero(PlayerBoard, newSelectedHex);
+                if (hexToCreateManaAt != null)
+                {
+                    cauldron.CreateMana(cauldron.currentAvailableColor, hexToCreateManaAt);
+                }
+                else
+                {
+                    Debug.Log("Error: hex was null");
+                }
                 
                 Types.ManaColors newColor = (Types.ManaColors)Random.Range(0, System.Enum.GetValues(typeof(Types.ManaColors)).Length);
                 cauldron.SetCauldronColor(newColor);
@@ -183,6 +195,35 @@ namespace DBS
                 default:
                     return null;
             }
+        }
+
+        public GridObject GetEmptyHexClosestToZero(GridHexXZ<Game.GridObject> board, GridObject startingHex)
+        {
+            if (startingHex.GridPosition.y == 0) return startingHex;
+
+            GridObject result = null;
+            
+            Debug.Log("Board height is " + board.GetHeight());
+            for (int i = 0; i < board.GetHeight(); i++)
+            {
+                GridObject hexObject = GetHex(board, new Vector2(startingHex.GridPosition.x, i));
+                if (hexObject.Mana.manaEnergy <= 0 && !hexObject.Unit.HasUnit)
+                {
+                    result = hexObject;
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        public GridObject GetRandomHex(GridHexXZ<Game.GridObject> board)
+        {
+            Game.GridObject gridObject = Game.Instance.GetHex(board, new Vector2(
+                Random.Range(0,Game.Instance.PlayerBoard.GetWidth()), 
+                Random.Range(0,Game.Instance.PlayerBoard.GetHeight())));
+
+            return gridObject;
         }
         
         // Given a board get the hex at the given position 
